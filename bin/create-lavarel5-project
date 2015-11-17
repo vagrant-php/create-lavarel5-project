@@ -187,3 +187,8 @@ vagrant ssh -c "echo 'CREATE DATABASE $name;' | mysql"
 
 # setup lavarel
 vagrant ssh -c "cd /vagrant && composer.phar install"
+
+# migrations and sample model
+vagrant ssh -c "cd /vagrant && php artisan make:migration create_tasks_table --create=tasks"
+vagrant ssh -c "cd /vagrant && php artisan migrate --force"
+vagrant ssh -c "cd /vagrant && php artisan make:model Task"
