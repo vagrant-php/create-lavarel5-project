@@ -1,13 +1,13 @@
 <?php
 
-$cacheDir = sys_get_temp_dir() .
-    DIRECTORY_SEPARATOR .
-    'lavarel' .
-    DIRECTORY_SEPARATOR .
-    trim(str_replace(DIRECTORY_SEPARATOR, '-', dirname(__DIR__)), '-');
-
-if (!is_dir($cacheDir)) {
-    mkdir($cacheDir, 0777, true);
+$runtimeDirConfig = __DIR__ . '/../bootstrap/runtime_dir_config.php';
+if (is_file($runtimeDirConfig)) {
+    $cacheDir = require $runtimeDirConfig;
+    if (!is_dir($cacheDir)) {
+        mkdir($cacheDir, 0777, true);
+    }
+} else {
+    $cacheDir = storage_path('framework/cache');
 }
 
 return [
