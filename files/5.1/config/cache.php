@@ -1,15 +1,5 @@
 <?php
 
-$runtimeDirConfig = __DIR__ . '/../bootstrap/runtime_dir_config.php';
-if (is_file($runtimeDirConfig)) {
-    $cacheDir = require $runtimeDirConfig;
-    if (!is_dir($cacheDir)) {
-        mkdir($cacheDir, 0777, true);
-    }
-} else {
-    $cacheDir = storage_path('framework/cache');
-}
-
 return [
 
     /*
@@ -54,7 +44,7 @@ return [
 
         'file' => [
             'driver' => 'file',
-            'path'   => $cacheDir,
+            'path'   => $app->getCacheDir(),
         ],
 
         'memcached' => [
