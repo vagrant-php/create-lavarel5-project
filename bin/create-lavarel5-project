@@ -14,6 +14,8 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 # defaults
 application=lavarel5
+locale=de_CH
+timezone=Europe/Zurich
 vagrantPhpBranch=14.04
 vagrantPhpRepository=https://github.com/vagrant-php/ubuntu.git
 vagrantProvider=virtualbox
@@ -26,6 +28,14 @@ do
     case $i in
         --name=*)
             name="${i#*=}"
+            shift
+        ;;
+        --locale=*)
+            locale="${i#*=}"
+            shift
+        ;;
+        --timezone=*)
+            timezone="${i#*=}"
             shift
         ;;
         --vagrantPhpBranch=*)
@@ -80,6 +90,9 @@ if [ -d "$name" ]; then
 fi
 
 # get other variables
+nameLength=${#name}
+hostname=$name.dev
+hostnameLength=${#hostname}
 url=https://github.com/laravel/laravel/archive/v$version.zip
 filename=laravel-$version.zip
 foldername=laravel-$version
@@ -137,7 +150,7 @@ if [ "$?" ==  1 ]; then
 fi
 
 # prepare a default vagrant.yml
-printf "hostname: $name.dev\napplication: $application\n" > vagrant.yml
+printf "hostname: $hostname\napplication: $application\n" > vagrant.yml
 
 # add sharetype if defined
 if [[ $vagrantSharetype ]]; then
@@ -171,7 +184,9 @@ if [ -d "$versionFilePath" ]; then
 fi
 
 # replace variables within configs
-sed -i "" -e "s/%%%%name%%%%/$name/g" $tempDir/config/app.php
+sed -i "" -e "s/%%%%hostname%%%%/$hostname/g" $tempDir/config/app.php
+sed -i "" -e "s/%%%%locale%%%%/$locale/g" $tempDir/config/app.php
+sed -i "" -e "s/%%%%timezone%%%%/$timezone/g" $tempDir/config/app.php
 sed -i "" -e "s/%%%%name%%%%/$name/g" $tempDir/config/database.php
 
 # copy the prepared config to the project
