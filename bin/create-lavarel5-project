@@ -186,7 +186,7 @@ fi
 # replace variables within configs
 sed -i "" -e "s/%%%%hostname%%%%/$hostname/g" $tempDir/config/app.php
 sed -i "" -e "s/%%%%locale%%%%/$locale/g" $tempDir/config/app.php
-sed -i "" -e "s/%%%%timezone%%%%/$timezone/g" $tempDir/config/app.php
+sed -i "" -e "s|%%%%timezone%%%%|$timezone|g" $tempDir/config/app.php
 sed -i "" -e "s/%%%%name%%%%/$name/g" $tempDir/config/database.php
 
 # copy the prepared config to the project
