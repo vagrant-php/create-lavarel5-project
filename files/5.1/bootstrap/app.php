@@ -66,7 +66,7 @@ class Application extends Illuminate\Foundation\Application
     /**
      * @return string
      */
-    private function getCacheDir()
+    public function getCacheDir()
     {
         if (null === $this->cacheDir) {
             $this->cacheDir = $this->getRuntimeDir() . '/cache';
@@ -81,7 +81,7 @@ class Application extends Illuminate\Foundation\Application
     /**
      * @return string
      */
-    private function getRuntimeDir()
+    public function getRuntimeDir()
     {
         if (null === $this->runtimeDir) {
             $runtimeDirConfig = __DIR__ . '/runtime_dir_config.php';
