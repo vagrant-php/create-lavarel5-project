@@ -78,7 +78,7 @@ if [ -z "$name" ]; then
 fi
 
 # check for name signs
-if [[ $name = *[^[:alnum:]]* ]]; then
+if [[ $name = *[^[:alnum:],\-]* ]]; then
     echo "please enter a project name which is alphanumeric"
     exit 1
 fi
@@ -90,12 +90,11 @@ if [ -d "$name" ]; then
 fi
 
 # get other variables
-nameLength=${#name}
 hostname=$name.dev
-hostnameLength=${#hostname}
 url=https://github.com/laravel/laravel/archive/v$version.zip
 filename=laravel-$version.zip
 foldername=laravel-$version
+safename=${name/[^[:alnum:]]/_}
 
 # check if the repository exists
 git ls-remote --exit-code $vagrantPhpRepository $vagrantPhpBranch > /dev/null
@@ -187,7 +186,7 @@ fi
 sed -i "" -e "s/%%%%hostname%%%%/$hostname/g" $tempDir/config/app.php
 sed -i "" -e "s/%%%%locale%%%%/$locale/g" $tempDir/config/app.php
 sed -i "" -e "s|%%%%timezone%%%%|$timezone|g" $tempDir/config/app.php
-sed -i "" -e "s/%%%%name%%%%/$name/g" $tempDir/config/database.php
+sed -i "" -e "s/%%%%safename%%%%/$safename/g" $tempDir/config/database.php
 
 # copy the prepared config to the project
 cp -rf $tempDir/* .
@@ -198,7 +197,7 @@ cd vagrant-php
 vagrant up --provider=$vagrantProvider
 
 # create database
-vagrant ssh -c "echo 'CREATE DATABASE $name;' | mysql"
+vagrant ssh -c "echo 'CREATE DATABASE $safename;' | mysql"
 
 # setup lavarel
 vagrant ssh -c "cd /vagrant && composer.phar install"
